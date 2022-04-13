@@ -1,0 +1,33 @@
+<h1>POKEMON</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type 1</th>
+            <th>Type 2</th>
+            <th>Total</th>
+            <th>HP</th>
+            <th>Attack</th>
+            <th>Defense</th>
+            <th>Special Attack</th>
+            <th>Special Defense</th>
+            <th>Speed</th>
+            <th>Legendary</th>
+        </tr>
+        {% for pokemon in object_list %}
+        <tr>
+            <td>{{pokemon.pokemon_id}}</td>
+            <td>{{pokemon.name}}</td>
+            <td>{{pokemon.type1}}</td>
+            <td>{{pokemon.type2}}</td>
+            <td>{{pokemon.total}}</td>
+            <td>{{pokemon.hp}}</td>
+            <td>{{pokemon.attack}}</td>
+            <td>{{pokemon.defense}}</td>
+            <td>{{pokemon.sp_attack}}</td>
+            <td>{{pokemon.sp_defense}}</td>
+            <td>{{pokemon.speed}}</td>
+            <td>{{pokemon.legendary}}</td>
+        </tr>
+        {% endfor %} 
+    </table>
