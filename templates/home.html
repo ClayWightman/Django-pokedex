@@ -17,7 +17,7 @@
         {% for pokemon in object_list %}
         <tr>
             <td>{{pokemon.pokemon_id}}</td>
-            <td>{{pokemon.name}}</td>
+            <td><a href = {% url 'pokemon_detail' pokemon.pk %} >{{pokemon.name}}</a></td>
             <td>{{pokemon.type1}}</td>
             <td>{{pokemon.type2}}</td>
             <td>{{pokemon.total}}</td>

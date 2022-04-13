@@ -1,0 +1,6 @@
+<h1>{{pokemon.name}}</h1>
+{% if pokemon.speed > 50 %}
+<div>{{pokemon.name}}'s speed is fast at {{pokemon.speed}}</div>
+{%else%} 
+<div>{{pokemon.name}}'s speed is slow at {{pokemon.speed}}</div>
+{% endif %}
