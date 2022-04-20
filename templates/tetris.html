@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <script src = "{% static 'js/tetris.js' %}"></script>
-    <h1 id = 'blah'> THIS IS TETRIS </h1>
-{% endblock content %} 
+<script src="{% static 'js/tetris.js' %}"></script>
+<link rel = "stylesheet" href = "{% static 'css/tetris.css' %}">
+<canvas id = 'game_canvas' height = 720 width = 400></canvas>
+{% endblock content %}
