@@ -101,11 +101,12 @@ $(document).ready(function(){
         /*===========================Piece functions ===============================*/
         addPiece(){
             var pieces = ["line", "l", "rev-l", "square", "z", "rev-z", "pyramid"]
+            var colors = ["red", "blue", "green", "yellow", "orange", "purple"]
             //var pieces = ["line", "line", "line", "line", "line", "line", "line"]
             this.pieceName = pieces[Math.floor((Math.random()*7))]
             this.pieceRotation = 0;
             this.pieceCenter = {'x': 4, 'y': 19};
-            this.pieceColor = "blue"
+            this.pieceColor = colors[Math.floor(Math.random() * 6)]
             this.pieceLocked = false
             this.putLivePieceOnBoard()
         }
@@ -155,7 +156,7 @@ $(document).ready(function(){
             for (var y = 0; y < this.boardRep[0].length; y++){
                 for (var x = 0; x < this.boardRep.length; x++){
                     if (this.boardRep[x][y][0] == 1){
-                        this.boardRep[x][y] = [2, "red"]
+                        this.boardRep[x][y] = [2, this.pieceColor]
                         this.pieceLocked = true
                     }
                 }
