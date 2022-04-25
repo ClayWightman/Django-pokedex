@@ -100,8 +100,8 @@ $(document).ready(function(){
 
         /*===========================Piece functions ===============================*/
         addPiece(){
-            //var pieces = ["line", "l", "rev-l", "square", "z", "rev-z", "pyramid"]
-            var pieces = ["line", "line", "line", "line", "line", "line", "line"]
+            var pieces = ["line", "l", "rev-l", "square", "z", "rev-z", "pyramid"]
+            //var pieces = ["line", "line", "line", "line", "line", "line", "line"]
             this.pieceName = pieces[Math.floor((Math.random()*7))]
             this.pieceRotation = 0;
             this.pieceCenter = {'x': 4, 'y': 19};
@@ -110,15 +110,7 @@ $(document).ready(function(){
             this.putLivePieceOnBoard()
         }
 
-        rotatePiece(){
-            if (this.pieceRotation == 3){
-                this.pieceRotation = 0
-            }else{
-                this.pieceRotation ++
-            }
-            this.clearOldLivePiece()
-            this.putLivePieceOnBoard()
-        }
+
 
         moveDownBlocked(){
             for (var y = 0; y < this.boardRep[0].length; y++){
@@ -199,6 +191,129 @@ $(document).ready(function(){
                 }
             }
         }
+
+        rotatePiece(){
+            if (this.canRotatePiece()){
+                if (this.pieceRotation == 3){
+                    this.pieceRotation = 0
+                }else{
+                    this.pieceRotation ++
+                }
+                this.clearOldLivePiece()
+                this.putLivePieceOnBoard()
+            }
+        }
+
+        canRotatePiece(){
+            var centerX = this.pieceCenter['x']
+            var centerY = this.pieceCenter['y']
+            var board = this.boardRep
+
+            if (this.pieceRotation == 3){
+                var rotation = 0
+            }else{
+                var rotation = this.pieceRotation + 1
+            }
+            if (!this.pieceLocked){
+                if (this.pieceName == "line"){
+                    if (rotation == 0){
+                        if (board[centerX-1][centerY-1][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX+1][centerY][0] == 2 || board[centerX+2][centerY][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 1){
+                        if (board[centerX][centerY+1][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX][centerY-1][0] == 2 || board[centerX][centerY-2][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 2){
+                        if(board[centerX-2][centerY][0] == 2 || board[centerX-1][centerY][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX+1][centerY][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 3){
+                        if(board[centerX][centerY+2][0] == 2 || board[centerX][centerY+1][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX][centerY-1][0] == 2){
+                            return false
+                        }
+                    }
+                }else if (this.pieceName == "l"){
+                    if (rotation == 0){
+                        if(board[centerX-1][centerY][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX+1][centerY][0] == 2 || board[centerX+1][centerY+1][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 1){
+                        if(board[centerX][centerY+1][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX][centerY-1][0] == 2 || board[centerX+1][centerY-1][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 2){
+                        if(board[centerX-1][centerY-1][0] == 2 || board[centerX-1][centerY][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX+1][centerY][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 3){
+                        if(board[centerX-1][centerY+1][0] == 2 || board[centerX][centerY+1][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX][centerY-1][0] == 2){
+                            return false 
+                        }
+                    }
+                }else if (this.pieceName == "rev-l"){
+                    if (rotation == 0){
+                        if(board[centerX-1][centerY+1][0] == 2 || board[centerX-1][centerY][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX+1][centerY][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 1){
+                        if(board[centerX][centerY+1][0] == 2 || board[centerX+1][centerY+1][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX][centerY-1][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 2){
+                        if(board[centerX-1][centerY][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX+1][centerY][0] == 2 || board[centerX+1][centerY-1][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 3){
+                        if(board[centerX-1][centerY-1][0] == 2 || board[centerX][centerY-1][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX][centerY+1][0] == 2){
+                            return false
+                        } 
+                    }
+                }else if (this.pieceName == "square"){
+                    return true
+                }else if (this.pieceName == "z"){
+                    if (rotation == 0 || rotation == 2){
+                        if(board[centerX-1][centerY+1][0] == 2 || board[centerX][centerY+1][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX+1][centerY][0] == 2){
+                            return false 
+                        }
+                    }else if (rotation == 1 || rotation == 3){
+                        if(board[centerX+1][centerY+1][0] == 2 || board[centerX+1][centerY][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX][centerY-1][0] == 2){
+                            return false
+                        }
+                    }
+                }else if (this.pieceName == "rev-z"){
+                    if (rotation == 0 || rotation == 2){
+                        if(board[centerX-1][centerY][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX][centerY+1][0] == 2 || board[centerX+1][centerY+1][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 1 || rotation == 3){
+                        if(board[centerX][centerY+1][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX+1][centerY][0] == 2 || board[centerX+1][centerY-1][0] == 2){
+                            return false
+                        }
+                    }
+                }else if (this.pieceName == "pyramid"){
+                    if (rotation == 0){
+                        if(board[centerX-1][centerY][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX][centerY+1][0] == 2 || board[centerX+1][centerY][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 1){
+                        if(board[centerX][centerY+1][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX+1][centerY][0] == 2 || board[centerX][centerY-1][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 2){
+                        if(board[centerX-1][centerY][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX+1][centerY][0] == 2 || board[centerX][centerY-1][0] == 2){
+                            return false
+                        }
+                    }else if (rotation == 3){
+                        if(board[centerX-1][centerY][0] == 2 || board[centerX][centerY][0] == 2 || board[centerX][centerY+1][0] == 2 || board[centerX][centerY-1][0] == 2){
+                            return false
+                        }
+                    }   
+                }
+                return true
+            }
+        }
+
 
         putLivePieceOnBoard(){
             var centerX = this.pieceCenter['x']
