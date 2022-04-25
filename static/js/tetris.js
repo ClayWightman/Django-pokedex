@@ -21,7 +21,7 @@ $(document).ready(function(){
             var textLine = ''
             for (var y = this.boardRep[0].length-1; y >= 0; y--){
                 for (var x = 0; x < this.boardRep.length; x++){
-                    textLine += "[" + this.boardRep[x][y][0] + "]" + " "
+                    textLine = textLine +  "[" + this.boardRep[x][y][0] + "]" + " "
                 }
                 console.log(textLine)
                 textLine = ''
@@ -29,13 +29,80 @@ $(document).ready(function(){
         }
 
         removeFilledRows(){
+            var touchedBlocks = false
+            var emptyRowCount = 0
+            var replacementRows = {}
+            //TODO GET TOUCHED BLOCKS
+            for(var y = 0; y < this.boardRep[0].length; y++){   //Set up the fill in row and empty the full rows
+                replacementRows[y] = y
+                var rowTotal = 0;
+                var rowAboveTotal = 0
+                for (var x = 0; x < this.boardRep.length; x++){
+                    rowTotal = rowTotal + this.boardRep[x][y][0]
+                    if (y == this.boardRep[0].length-1){
+                        rowAboveTotal = 0
+                    }else{
+                        rowAboveTotal = rowAboveTotal + this.boardRep[x][y+1][0]
+                    }
+                }
+                if (rowTotal == 20){    //Empty the full rows
+                    if (!rowAboveTotal == 0){ //if first row to empty is not the top row
+                        emptyRowCount ++
+                    }
+                    for (var x = 0; x < this.boardRep.length; x++){
+                        this.boardRep[x][y] = [0, 'blank']
+                    }
+                }
+            }
+            if (emptyRowCount > 0){
+                for (var y = this.boardRep[0].length-1; y > 0; y--){
+                    var rowTotal = 0
+                    var underRowTotal = 0
+                    for ( var x = 0; x < this.boardRep.length; x++){
+                        rowTotal = rowTotal + this.boardRep[x][y][0]
+                        underRowTotal = underRowTotal + this.boardRep[x][y-1][0]
+                    }
+                    if (rowTotal > 0){
+                        touchedBlocks = true
+                    }
+                    if (y + emptyRowCount > this.boardRep[0].length-1){
+                        replacementRows[y] = "blank"
+                        replacementRows[y-emptyRowCount] = y
+                    } else{
+                        if (emptyRowCount > 0 && touchedBlocks){
+                            if (rowTotal == 0){
+                                emptyRowCount --    
+                            }else{
+                                replacementRows[y-emptyRowCount] = y
+                            }
+                        }else{
+                            replacementRows[y-emptyRowCount] = y
+                        }
+                    }
+                }
+                this.redrawClearedBoard(replacementRows)
+            }
+        }
 
+
+        redrawClearedBoard(replacementRows){
+            for (var currentInx = 0; currentInx < Object.keys(replacementRows).length; currentInx ++){
+                var replaceInx = replacementRows[currentInx]
+                for (var x = 0; x < this.boardRep.length; x++){
+                    if (replacementRows[currentInx] == "blank"){
+                        this.boardRep[x][currentInx] = [0, "blank"]
+                    }else{
+                        this.boardRep[x][currentInx] = this.boardRep[x][replaceInx]
+                    }
+                }
+            }
         }
 
         /*===========================Piece functions ===============================*/
         addPiece(){
-            //pieces = ["line", "l", "rev-l", "square", "z", "rev-z", "pyramid"]
-            this.pieceName = ["line", "line", "line", "line", "line", "line", "line"][Math.floor((Math.random()*7))]
+            //var pieces = ["line", "l", "rev-l", "square", "z", "rev-z", "pyramid"]
+            var pieces = ["line", "line", "line", "line", "line", "line", "line"]
+            this.pieceName = pieces[Math.floor((Math.random()*7))]
             this.pieceRotation = 0;
             this.pieceCenter = {'x': 4, 'y': 19};
             this.pieceColor = "blue"
@@ -49,6 +116,8 @@ $(document).ready(function(){
             }else{
                 this.pieceRotation ++
             }
+            this.clearOldLivePiece()
+            this.putLivePieceOnBoard()
         }
 
         moveDownBlocked(){
@@ -106,15 +175,15 @@ $(document).ready(function(){
                 if (this.moveDownBlocked()){
                     this.lockPiece()
                 }else{
-                    this.pieceCenter['y'] -= 1
+                    this.pieceCenter['y'] --
                 }
             }else if (direction == "left"){
                 if (!this.moveLeftBlocked()){
-                    this.pieceCenter['x'] -= 1
+                    this.pieceCenter['x'] --
                 }
             }else if (direction == "right"){
                 if (!this.moveRightBlocked()){
-                    this.pieceCenter['x'] += 1
+                    this.pieceCenter['x'] ++ 
                 }
             }
             this.clearOldLivePiece()
@@ -162,6 +231,28 @@ $(document).ready(function(){
                     }
                 }else if (this.pieceName == "l"){
                     if (rotation == 0){
+                        board[centerX-1][centerY] = fillValue   
+                        board[centerX][centerY] = fillValue   
+                        board[centerX+1][centerY] = fillValue   
+                        board[centerX+1][centerY+1] = fillValue
+                    }else if (rotation == 1){
+                        board[centerX][centerY+1] = fillValue   
+                        board[centerX][centerY] = fillValue   
+                        board[centerX][centerY-1] = fillValue   
+                        board[centerX+1][centerY-1] = fillValue
+                    }else if (rotation == 2){
+                        board[centerX-1][centerY-1] = fillValue   
+                        board[centerX-1][centerY] = fillValue   
+                        board[centerX][centerY] = fillValue   
+                        board[centerX+1][centerY] = fillValue
+                    }else if (rotation == 3){
+                        board[centerX-1][centerY+1] = fillValue   
+                        board[centerX][centerY+1] = fillValue   
+                        board[centerX][centerY] = fillValue   
+                        board[centerX][centerY-1] = fillValue
+                    }
+                }else if (this.pieceName == "rev-l"){
+                    if (rotation == 0){
                         board[centerX-1][centerY+1] = fillValue
                         board[centerX-1][centerY] = fillValue
                         board[centerX][centerY] = fillValue
@@ -182,69 +273,65 @@ $(document).ready(function(){
                         board[centerX][centerY] = fillValue
                         board[centerX][centerY+1] = fillValue   
                     }
-                }else if (this.pieceName == "rev-l"){
-                    if (rotation == 0){
-                        board[centerX-1][centerY] = fillValue   
-                        board[centerX][centerY] = fillValue   
-                        board[centerX+1][centerY] = fillValue   
-                        board[centerX+1][centerY+1] = fillValue
-                    }else if (rotation == 1){
-                        board[centerX][centerY+1] = fillValue   
-                        board[centerX][centerY] = fillValue   
-                        board[centerX][centerY-1] = fillValue   
-                        board[centerX+1][centerY-1] = fillValue
-                    }else if (rotation == 2){
-                        board[centerX-1][centerY] = fillValue   
-                        board[centerX][centerY] = fillValue   
-                        board[centerX+1][centerY] = fillValue   
-                        board[centerX+1][centerY-1] = fillValue
-                    }else if (rotation == 3){
-                        board[centerX-1][centerY-1] = fillValue   
-                        board[centerX][centerY-1] = fillValue   
-                        board[centerX][centerY] = fillValue   
-                        board[centerX][centerY+1] = fillValue
-                    }
                 }else if (this.pieceName == "square"){
-                    if (rotation == 0){
-                        
-                    }else if (rotation == 1){
-
-                    }else if (rotation == 2){
-
-                    }else if (rotation == 3){
-                        
-                    }
+                    board[centerX-1][centerY] = fillValue
+                    board[centerX][centerY] = fillValue
+                    board[centerX-1][centerY-1] = fillValue
+                    board[centerX][centerY-1] = fillValue
                 }else if (this.pieceName == "z"){
-                    if (rotation == 0){
-                        
-                    }else if (rotation == 1){
-
-                    }else if (rotation == 2){
-
-                    }else if (rotation == 3){
-                        
+                    if (rotation == 0 || rotation == 2){
+                        board[centerX-1][centerY+1] = fillValue
+                        board[centerX][centerY+1] = fillValue
+                        board[centerX][centerY] = fillValue
+                        board[centerX+1][centerY] = fillValue
+                    }else if (rotation == 1 || rotation == 3){
+                        board[centerX+1][centerY+1] = fillValue
+                        board[centerX+1][centerY] = fillValue
+                        board[centerX][centerY] = fillValue
+                        board[centerX][centerY-1] = fillValue
                     }
                 }else if (this.pieceName == "rev-z"){
-                    if (rotation == 0){
-                        
-                    }else if (rotation == 1){
-
-                    }else if (rotation == 2){
-
-                    }else if (rotation == 3){
-                        
+                    if (rotation == 0 || rotation == 2){
+                        board[centerX-1][centerY] = fillValue
+                        board[centerX][centerY] = fillValue
+                        board[centerX][centerY+1] = fillValue
+                        board[centerX+1][centerY+1] = fillValue
+                    }else if (rotation == 1 || rotation == 3){
+                        board[centerX][centerY+1] = fillValue
+                        board[centerX][centerY] = fillValue
+                        board[centerX+1][centerY] = fillValue
+                        board[centerX+1][centerY-1] = fillValue
                     }
                 }else if (this.pieceName == "pyramid"){
                 if (rotation == 0){
-                        
+                    board[centerX-1][centerY] = fillValue
+                    board[centerX][centerY] = fillValue
+                    board[centerX][centerY+1] = fillValue
+                    board[centerX+1][centerY] = fillValue
                 }else if (rotation == 1){
-
+                    board[centerX][centerY+1] = fillValue
+                    board[centerX][centerY] = fillValue
+                    board[centerX+1][centerY] = fillValue
+                    board[centerX][centerY-1] = fillValue
                 }else if (rotation == 2){
-
+                    board[centerX-1][centerY] = fillValue
+                    board[centerX][centerY] = fillValue
+                    board[centerX+1][centerY] = fillValue
+                    board[centerX][centerY-1] = fillValue
                 }else if (rotation == 3){
-                    
+                    board[centerX-1][centerY] = fillValue
+                    board[centerX][centerY] = fillValue
+                    board[centerX][centerY+1] = fillValue
+                    board[centerX][centerY-1] = fillValue  
                 }       
             }
+        }
+    }
+    gameOver(){
+        if (this.boardRep[3][19][0] == 2 || this.boardRep[4][19][0] == 2 || this.boardRep[5][19][0] == 2 || this.boardRep[6][19][0] == 2){
+            return true
+        }else{
+            return false
         }
     }
 }
@@ -253,19 +340,24 @@ $(document).ready(function(){
     game.addPiece()
     moveDownInterval = setInterval(function(){
         game.move("down")
+        game.removeFilledRows()
         if (game.pieceLocked){
-            game.addPiece()
+            if (game.gameOver()){
+                console.log("GAME OVER")
+                clearInterval(moveDownInterval)
+            }else{
+                game.addPiece()
+            }
         }
-        //game.printBoard()
     }, 500)
     document.addEventListener("keydown",function(event){
-        if (event.key === "a"){
+        if (event.key.toUpperCase() === "A"){
             game.move("left")
         }
-        if (event.key === "s"){
+        if (event.key.toUpperCase() === "S"){
             game.move("down")
         }
-        if (event.key === "d"){
+        if (event.key.toUpperCase() === "D"){
             game.move("right")
         }
         if (event.key === " "){
@@ -281,8 +373,6 @@ $(document).ready(function(){
     ctx = canvas.getContext("2d")
     drawOnCanvasInterval = setInterval(function(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "green"
-        ctx.fillRect(0,0,40,40)
         for (var y = 0; y < game.boardRep[0].length; y++){
             for (var x = 0; x < game.boardRep.length; x++){
                 xPos = x * 40
