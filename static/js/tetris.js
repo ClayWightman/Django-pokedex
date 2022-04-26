@@ -459,8 +459,9 @@ $(document).ready(function(){
         game.removeFilledRows()
         if (game.pieceLocked){
             if (game.gameOver()){
-                console.log("GAME OVER")
+                writeGameoverToCanvas()
                 clearInterval(moveDownInterval)
+                clearInterval(drawOnCanvasInterval)
             }else{
                 game.addPiece()
             }
@@ -482,20 +483,40 @@ $(document).ready(function(){
     })
     
 
-    
+    function writeGameoverToCanvas(){
+        var canvas = $("#game_canvas")[0]
+        var ctx = canvas.getContext("2d")
+        ctx.fillStyle = "red"
+        ctx.strokeStyle = "black"
+        ctx.font = "60px Arial"
+        ctx.lineWidth = 2
+        ctx.strokeText("Game Over", 40, 50)
+        ctx.fillText("Game Over", 40, 50)
+        ctx.strokeText("You Suck", 60, 700)
+        ctx.fillText("You Suck", 60, 700)
+    }
 
 
-    canvas = $("#game_canvas")[0]
-    ctx = canvas.getContext("2d")
+    var canvas = $("#game_canvas")[0]
+    var ctx = canvas.getContext("2d")
     drawOnCanvasInterval = setInterval(function(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (var y = 0; y < game.boardRep[0].length; y++){
             for (var x = 0; x < game.boardRep.length; x++){
                 xPos = x * 40
                 yPos = canvas.height-((y+1) * 40)
+                if (game.boardRep[x][y][0] == 0){
+                    ctx.strokeStyle = "gray"
+                    ctx.lineWidth = .3
+                    //ctx.setLineDash([5, 15]);
+                    ctx.strokeRect(xPos, yPos, 40, 40)
+                }
                 if (game.boardRep[x][y][0] == 1 || game.boardRep[x][y][0] == 2){
                     ctx.fillStyle = game.boardRep[x][y][1]
                     ctx.fillRect(xPos, yPos, 40, 40)
+                    ctx.lineWidth = 2
+                    ctx.strokeStyle = "black"
+                    ctx.strokeRect(xPos, yPos, 40, 40)
                 }
             }
         }
