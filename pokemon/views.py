@@ -4,7 +4,7 @@ from .models import Pokemon
 
 class PokemonListView(ListView):
     model = Pokemon
-    template_name = 'home.html'
+    template_name = 'pokemon/pokemon_home.html'
 
 # Create your views here.
 class PokemonDetailView(DetailView):
