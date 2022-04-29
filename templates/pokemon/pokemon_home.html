@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>POKEMON</h1>
-    <table>
+<div class = "container">
+    <p >This is my description</p>
+    <div class = "table-responsive">
+    <table class = "table table-dark">
         <tr>
             <th>ID</th>
             <th>Name</th>
@@ -33,4 +36,6 @@
         </tr>
         {% endfor %} 
     </table>
+    </div>
+    </div>
     {% endblock content %}

@@ -6,7 +6,7 @@ class PokemonListView(ListView):
     model = Pokemon
     template_name = 'pokemon/pokemon_home.html'
 
-# Create your views here.
+
 class PokemonDetailView(DetailView):
     model = Pokemon
     template_name = 'pokemon/pokemon_detail.html'

@@ -5,4 +5,4 @@ from django.http import HttpResponse
 # Create your views here.
 class TetrisView(View):
     def get(self, request):
-        return render(request, 'tetris.html')
+        return render(request, 'projects/tetris.html')
