@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<p>
+    <a href="{% url 'resume_download' filename='Resume.pdf' %}">Download Resume as PDF</a>
+</p>
+<p>
+    <a href="{% url 'resume_download' filename='Resume.docx'%}">Download Resume as Word Document (.DOCX)</a>
+</p>
+<div class="container dashed-container">
+    <div style = "height: 90vh;" class="above-fold">
+        <div class="row h-100">
+            <div class=" h-100 col align-self-center text-center">
+                <div class="h-100 card text-center mx-auto profile-card">
+                    <iframe src="{% static 'files/Resume.pdf' %}" style="height: 100%; width: 100%;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
