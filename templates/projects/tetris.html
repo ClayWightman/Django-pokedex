@@ -2,6 +2,50 @@
 {% load static %}
 {% block content %}
 <script src="{% static 'js/tetris.js' %}"></script>
-<link rel = "stylesheet" href = "{% static 'css/tetris.css' %}">
-<canvas id = 'game_canvas' height = 800 width = 400></canvas>
+<link rel="stylesheet" href="{% static 'css/tetris.css' %}">
+
+<div class="content">
+    <div class='row'>
+        <div class='col'>
+  
+            <div class="row" style = 'height: 45vh;'>
+                <div class="col text-right align-self-end">
+                    <div id = 'a-btn' class='move-btn btn btn-primary'>A</div>
+                </div>
+                <div class="col text-center align-self-end">
+                    <div id = 's-btn' class='move-btn btn btn-primary'>S</div>
+                </div>
+                <div class="col text-left align-self-end">
+                    <div id = 'd-btn' class='move-btn btn btn-primary'>D</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <div id = 'space-btn' class='move-btn btn btn-primary' style = "margin-top: 10px;">Space</div>
+                </div>
+            </div>
+        </div>
+        <div class='col'>
+            <div class='container-canvas'>
+                <canvas id='game_canvas' height=800 width=400></canvas>
+            </div>
+        </div>
+        <div class='col'>
+
+        </div>
+
+    </div>
+</div>
+
+<style>
+    #game_canvas {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+
+    
+</style>
 {% endblock content %}

@@ -467,6 +467,11 @@ $(document).ready(function(){
             }
         }
     }, 500)
+    document.getElementById("a-btn").addEventListener("click", function(){game.move("left")})
+    document.getElementById("s-btn").addEventListener("click", function(){game.move("down")})
+    document.getElementById("d-btn").addEventListener("click", function(){game.move("right")})
+    document.getElementById("space-btn").addEventListener("click", function(){game.rotatePiece()})
+
     document.addEventListener("keydown",function(event){
         if (event.key.toUpperCase() === "A"){
             game.move("left")
